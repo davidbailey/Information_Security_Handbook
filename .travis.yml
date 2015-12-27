@@ -1,0 +1,23 @@
+sudo: false
+addons:
+  apt:
+    packages:
+    - dvipng
+    - lmodern
+    - texlive-latex-base
+    - texlive-latex-recommended
+    - texlive-latex-extra
+    - texlive-fonts-recommended
+    - texlive-fonts-extra
+script:
+- pdflatex -interaction=nonstopmode Information_Security_Handbook.tex
+deploy:
+  provider: releases
+  api_key:
+    secure: ${GH_TOKEN}
+  skip_cleanup: true
+  file:
+  - Information_Security_Handbook.pdf
+  on:
+    repo: davidbailey/Information_Security_Handbook
+    tags: true
