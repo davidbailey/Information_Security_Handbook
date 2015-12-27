@@ -1,0 +1,72 @@
+\section{Computers}\label{sec:"Computers"}
+Computers: servers, workstations, laptops, tablets, smartphones, etc. The human-interface devices of your information. Organize your computers in the proper network security zones. Don't put computers in multiple security zones. Use each computer for one task only. For example, run a separate web server and an email server. Use one workstation as an administrator and another to check your email.\\\\
+Computer security starts with your  \hyperref[subsec:"Computer Hardening Process"]{Computer Hardening Process}. The next step in the \hyperref[subsubsec:"Computer Lifecycle"]{Computer Lifecycle} is to maintain your computers. Last follow your \hyperref[subsec:"Disposal and Retention"]{Disposal Policy} for computers. Ensure all computers and applications are in your inventory and you have strong policies around the management of these.
+\subsection{Management}
+Managing one computer is easy. Managing more than one is difficult. Utilize a management solution tailored to your needs. Use Active Directory\resourcecite{WAD} and Group Policy Objects (GPOs) for Windows computers. Consider using Open Directory\resourcecite{WOD} or JAMF CasperSuite\resourcecite{JAMF} for Macs. Use Puppet\resourcecite{Puppet} or Chef\resourcecite{Chef} for Linux servers. (Puppet also supports Windows.) Use mobile-device management (MDM) to manage mobile devices. These management solutions automate and document the rest of the sections in this chapter.
+\subsubsection{Pets and Cattle}
+Due to the proliferation of virtual machines and cloud computing, Microsoft's Bill Baker created the terms Pets and Cattle. Pet administrators manage each computer individually and with great care. When a computer breaks, they fix it. Cattle administrators treat computers as disposable assets. If one gets sick, re-image it. This mentality can help with management. It is often quicker to redeploy a server than remove a virus or install a patch.
+\subsection{Malware}
+Malicious Software (malware) is any virus, worm, or trojan. Malware could be an standalone application, embedded in an application, or embedded in a document. Run an up-to-date version of your favorite anti-malware\resourcecite{WAV} program on all computers to help prevent and contain malware. Many malware products include management consoles to help distribute signatures and updates. Ensure antivirus software is always up-to-date.\\\\
+Malware comes from different sources: the Internet, other computers on the network, malicious flash drives, etc. Educate employees on how to detect suspicious websites and not to connect flash drives or other media from untrusted sources. Also educate employees how to respond to suspected malware.\\\\
+EICAR\resourcecite{EICAR} is a malware test file. The 68 character string saved as a text file should be detected by all anti-malware programs.
+\begin{center}
+\begin{figure}[ht]
+\begin{verbatim}
+X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*
+\end{verbatim}
+\caption{EICAR}
+\end{figure}
+\end{center}
+\subsection{Patching (Externally-developed Applications)}
+Applying security patches\resourcecite{80040}\textsuperscript{,}\resourcecite{WPatch} is the most effective method of protecting computers from known security vulnerabilities. However, patching doesn't fix everything: zero-day vulnerabilities are software exploits for which no patch is available.\\\\
+Patching all software on all computers is usually a large undertaking. Also, because patches are released often, they must be applied often. Patch management solutions help to drastically reduce the workload of patching. Also, most operating systems have a built-in patching functionality such as Windows Updates\resourcecite{WWU} and Windows Server Update Services\resourcecite{WWSUS} for Microsoft Windows or Apple Software Update\resourcecite{WASU} and the Mac App Store\resourcecite{WMAS} for Mac OS X. Linux computers have apt, yum, or anther tool.\\\\
+Patching can cause issues with software compatibility, however, this has lessened in recent years. However, it is still advisable to test patches on a subset of computers before deploying to all computers.\\\\
+Client-side attacks are attacks against users' computers instead of servers. Web-based client-side attacks commonly attempt to exploit vulnerabilities in out-of-date web browsers or plug-ins such as Adobe Flash or Oracle Java. Because these attacks are common against all computers on the Internet, patching is important for all computers connected to the Internet. These attacks are also not typically prevented by firewalls or intrusion prevention systems.
+\subsection{Internally-developed Applications}\label{subsec:"Internally-developed Applications"}
+Patching is important for externally-developed applications, but what about internally-developed applications\resourcecite{WAppSoftware}? Implement security in your Software Development Lifecycle. Use training\resourcecite{alert1} to educate your developers about secure coding practices. Inventory all your applications. Continuously perform (web) application assessments on applications. (The OWASP Top 10\resourcecite{OWASPTop10} is included as an appendix.) Perform code reviews on your source code. Require developers to review eachother's code.
+\subsection{Logging and Monitoring}
+Configure all log sources (Application Logs, Windows Event Logs, Mac/Linux Syslogs, Network Device Syslog, Netflow, etc.) to log to a central log collector. This protects logs from tampering or destruction and allows you to analyse events from different systems. Next, implement a mechanism to process and analyse logs such as the Elasticsearch, Logstash, and Kibana (ELK)\resourcecite{ELK} platform. Regularly check logs.
+\subsection{Backups}
+If encrypt, encrypt, encrypt is the mantra of confidentiality, and hash, hash, hash is the mantra of integrity, then backup, backup, backup is the mantra of availability. Perform routine backups and store backups off-site by backing up to a remote site or by moving encrypted back medium to a secure location. Follow DR/BCP documentation and retention policies to determine what to backup, how often to back it up, and when to destroy backups.\\\\
+\textbf{Assessment}
+\begin{description}
+\aitem{Verify up-to-date anti-malware software is installed on all computers on the network. Many vulnerability scanners will automate this task by providing a list of all installed software on all computers.}
+\aitem{Vulnerability scan all computers on the network to verify all software is up-to-date.}
+\end{description}
+\textbf{Documentation}
+\begin{description}
+\ditem{Document installation of anti-malware software in the System Hardening Process.}
+\ditem{Require all guest computers on the network to run up-to-date anti-malware software.}
+\ditem{Train employees not to visit suspicious websites or use suspicious flash drives.}
+\ditem{Create a policy that requires all software on all computers on the network to be up-to-date.}
+\ditem{Document a procedure to patch all computers on the network. Consider an automated patch management solution.}
+\end{description}
+\textbf{Risk Management}\\\\
+\begin{tabularx}{\textwidth}{ l | X }
+Threats & Controls \\
+\hline
+\tcitem{Malware}{Install anti-malware software on all computers}
+\tcitem{Publicly known software exploit}{Remove unnecessary software and patch all installed software}
+\end{tabularx}\vspace{5mm}
+\tccite{Malware}{Install anti-malware software on all computers}
+\tccite{Publicly known software exploit}{Remove unnecessary software and patch all installed software}
+\textbf{Resources}
+\begin{enumerate}
+\resource[WAD]{Active Directory - Wikipedia}{https://en.wikipedia.org/wiki/Active_Directory}
+\resource[WOD]{Apple Open Directory - Wikipedia}{https://en.wikipedia.org/wiki/Apple_Open_Directory}
+\resource[JAMF]{JAMF CasperSuite}{http://www.jamfsoftware.com/products/casper-suite/}
+\resource[Chef]{Chef}{https://www.chef.io}
+\resource[Puppet]{Puppet Labs}{https://puppetlabs.com}
+\resource[WAV]{Anti-virus - Wikipedia}{https://en.wikipedia.org/wiki/Anti-virus}
+\resource[EICAR]{EICAR}{http://www.eicar.org/86-0-Intended-use.html}
+\resource[80040]{NIST Special Publication 800-40 Revision 3 Guide to Enterprise Patch Management Technologies}{http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-40r3.pdf}
+\resource[WPatch]{Patch - Wikipedia}{https://en.wikipedia.org/wiki/Patch_(computing)}
+\resource[WASU]{Apple Software Update - Wikipedia}{https://en.wikipedia.org/wiki/Apple_Software_Update}
+\resource[WMAS]{Mac App Store - Wikipedia}{https://en.wikipedia.org/wiki/Mac_App_Store}
+\resource[WWSUS]{Windows Server Update Services - Wikipedia}{https://en.wikipedia.org/wiki/Windows_Server_Update_Services}
+\resource[WWU]{Windows Update - Wikipedia}{https://en.wikipedia.org/wiki/Windows_Update}
+\resource[WAppSoftware]{Application Software - Wikipedia}{http://en.wikipedia.org/wiki/Application_software}
+\resource[OWASPTop10]{OWASP Top 10}{https://www.owasp.org/index.php/Top_10_2013-Top_10}
+\resource[alert1]{alert(1) to win}{http://escape.alf.nu}
+\resource[ELK]{ELK Stack Download}{https://www.elastic.co/downloads}
+\end{enumerate}

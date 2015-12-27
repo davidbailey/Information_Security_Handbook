@@ -1,0 +1,86 @@
+\section{Cryptography}\label{sec:"Cryptography"}
+\subsection{Encryption}
+Encrypt, encrypt, encrypt is the mantra of many information security officers. Though encryption can be a lifesaver in many situations, it does have drawbacks. Let's take a look at the types of encryption out there.
+\subsubsection{Encryption at Rest}
+Encryption\resourcecite{Wencryption} at rest protects information that is stored on media (hard drive, flash drives, tapes, etc.)
+There are two ways to implement encryption at rest: hardware encryption and software encryption. Hardware encryption is specially designed hardware that automatically encrypts information as it is written to the media. Hard drives, flash drives, tape drives, and other devices are available with hardware encryption. It is usually faster than software encryption. In the case of many hardware-encrypted hard drives and flash drives, it often ensures that all data written to the media is encrypted.
+Software encryption is when a software program encrypts data stored on media. This can be anything from an encrypted Microsoft Word or Adobe PDF document, to an encrypted dis image, to an encrypted hard drive. Software encryption is usually slower. It is also possible to have unencrypted information stored along with the encrypted media. Full-disk encryption refers to an encryption method that encrypts all the contents of a drive. Full-disk encryption is common on laptops and smartphones; it is becoming common on servers, workstations, and even printers. Windows includes Bitlocker\resourcecite{BitLocker} and Mac OS X includes FileVault.
+\subsubsection{Encryption in Motion}
+Enryption in motion protects information as it moves across a network. Most common network protocols have been rewritten to support encryption. For example, HTTPS is HTTP with encryption added. This type of encryption is also called Secure Socket Layer (SSL) or Transmission Layer Security (TLS). VPNs create an encrypted tunnel for all traffic between two networks or a computer and a network.
+\subsubsection{Encryption Ciphers}
+The encryption cipher is the process by which information is encrypted and decrypted. The simplest example of a cipher is a bit shift: take a string \emph{hello} and shift each letter to the next letter in the alphabet resulting in \emph{ifmmp}. Do decrypt this string, shift each letter to the previous letter and you are back at \emph{hello}.
+Currently, most people use AES (Advanced Encryption Standard) for encrypting data at rest and in motion. There are also supporting protocols that accompany AES. Keys, like in the physical world, are used to lock and unlock encrypted information. To accomplish a complete encryption and decryption you need an algorithm, a key, and information.
+\begin{equation}
+Information \xrightarrow[with\ Key]{Algorithm} Encrypted\ Information
+\end{equation}\begin{equation}
+Encrypted\ Information \xrightarrow[with\ Key]{Algorithm} Original\ Information
+\end{equation}
+In this example, both the encrypting party and the decrypting party both need to use the same algorithm and key. There are special ways to exchange keys when communication begins.
+Bit length represents the length of the key. 128, 192, and 256 bit lengths are standard for AES. Older protocols have shorter bit lengths and should not be used. Follow the Mozilla Wiki Recommended TLS Configurations\resourcecite{MozillaTLS} included as an appendix. Also, federal standards often require FIPS 140-2\resourcecite{WFIPS}\textsuperscript{,}\resourcecite{FIPS} compliance.\\\\
+\textbf{Assessment}
+\begin{description}
+\aitem{How to connect to an SSL port:} \begin{verbatim}openssl s_client -connect server:443\end{verbatim}
+\aitem{How to check for SSLv2:} \begin{verbatim}openssl s_client -connect server:443 -ssl2\end{verbatim}
+\aitem{Qualys SSL Labs - SSL Server Test\resourcecite{QualysSSL}}
+\end{description}
+\textbf{Documentation}
+\begin{description}
+\ditem{Mobile Device Policy requires full-disk encryption for all mobile devices.}
+\end{description}
+\textbf{Risk Management}\\\\
+\begin{tabularx}{\textwidth}{ X | X }
+Threats & Controls \\
+\hline
+\tcitem{Compromise of information due to no encryption or weak encryption}{Strong encryption}
+\end{tabularx}\vspace{5mm}
+\tccite{Compromise of information due to no encryption or weak encryption}{Strong encryption}
+\textbf{Resources}
+\begin{enumerate}
+\resource[Wencryption]{Encryption - Wikipedia}{https://en.wikipedia.org/wiki/Encryption}
+\resource[BitLocker]{BitLocker Drive Encryption Security Policy}{http://csrc.nist.gov/groups/STM/cmvp/documents/140-1/140sp/140sp947.pdf}
+\resource[MozillaTLS]{Security/Server Side TLS - MozillaWiki}{https://wiki.mozilla.org/Security/Server_Side_TLS}
+\resource[WFIPS]{FIPS 140-2 - Wikipedia}{https://en.wikipedia.org/wiki/FIPS_140-2}
+\resource[FIPS]{NIST FIPS 140-2}{http://csrc.nist.gov/publications/PubsFIPS.html\#140-2}
+\resource[QualysSSL]{Qualys SSL Labs - SSL Server Test}{https://www.ssllabs.com/ssltest/}
+\resource{Applied Crypto Hardening}{https://bettercrypto.org/static/applied-crypto-hardening.pdf}
+\resource{Cryptography I - Coursera/Stanford University}{https://class.coursera.org/crypto-010}
+\end{enumerate}
+\subsection{Hashing}
+Hashing\resourcecite{WHash} is a one-way, mathematical function (algorithm) that can be used to identify or obfuscate data. For example, the MD5\resourcecite{MD5} algorithm applied to the string \emph{hello} results in the string \emph{5d41402abc4b2a76b9719d911017c592}. MD5 will always give the same answer when provided with the same input. However, it is difficult to reverse the function and determine what input results in an output of \emph{5d41402abc4b2a76b9719d911017c592} without prior knowledge.
+\begin{equation}
+Data\xrightarrow[]{Algorithm} Hash
+\end{equation}\begin{equation}
+hello \xrightarrow[]{MD5} 5d41402abc4b2a76b9719d911017c592
+\end{equation}
+Hashing is only reliable for confidentiality when the number of possible inputs is large. For example, hashing a Social Security Number does not obfuscate the number because there are less than one billion possible Social Security Numbers. It is trivial to compute all one billion possibilities and compare hashes. This technique is described more in Password Storage below. It is also important to note that a hashing algorithm does not use a key.
+\\\\\textbf{File Integrity}\\Computer programs hash files to create a short string that can be compared against later. If the same file is hashed in the future and the strings are the same, the file is unchanged. If the hash is different, the file has been changed. One example where this is common is backups. When restoring from a backup, the backup software will record a hash for each file when it is backed up and restored. If the hashes do not match, the file has been corrupted. Another example is when downloading software from a website. Many sites will provide a hash along side the download link. After downloading the file, the hash can be used to ensure the file was downloaded successfully. MD5, SHA-1,\resourcecite{SHA1} and SHA-2\resourcecite{SHA2} are common hashing algorithms. However, MD5 and SHA-1 have flaws and should not be used.
+\\\\\textbf{Password Storage}\\Hashes are also used when storing passwords. When an account is created, the creation procedure will hash the user's password and store the hash. The log in procedure will also hash the user's password and compare the two hashes. If the two are the same, the passwords is correct. If not, the passwords do not match. This provides limited protection if the password database is compromised. The attacker does not have the actual passwords, but rather the hashes.
+However, as with the Social Security Number example above, large tables have been created for the most common algorithms that translate hashes back to original passwords. These tables are called Rainbow Tables. A salt can be added to the password to prevent these attacks. However, an increase in computing power has made brute-force attacks on hashes reasonable. Because of this, many hashing algorithms can be configured to vary the number of iterations they are run to provide protection against these attacks.
+Windows stores passwords using the NTLM\resourcecite{WNTLM} algorithm. Older version used the Lan Manager\resourcecite{WLMHash} algorithm. Both of these algorithms have Rainbow Tables available.\\\\
+Mac and Linux computer store passwords using different algorithms and often use salts. Web application developers should choose a strong algorithm to store passwords such as bcrypt\resourcecite{WBcrypt}.\\\\
+\textbf{Assessment}\\\\
+Use pwdump\resourcecite{Wpwdump} to extract passwords and ophcrack\resourcecite{ophcrack} with Free Rainbow Tables\resourcecite{FreeRT} to crack them.\\\\
+\textbf{Risk Management}\\\\
+\begin{tabularx}{\textwidth}{ X | X }
+Threats & Controls \\
+\hline
+\tcitem{Inability to ensure data integrity}{Hash files to ensure integrity}
+\tcitem{No password hashing or weak password hashing}{Use strong hashing algorithms for password storage.}
+\end{tabularx}\vspace{5mm}
+\tccite{Inability to ensure data integrity}{Hash files to ensure integrity}
+\tccite{No password hashing or weak password hashing}{Use strong hashing algorithms for password storage.}
+\textbf{Resources}
+\begin{enumerate}
+\resource[WHash]{Hash function - Wikipedia}{https://en.wikipedia.org/wiki/Hash_function}
+\resource[MD5]{MD5 - Wikipedia}{https://en.wikipedia.org/wiki/MD5
+}
+\resource[SHA1]{SHA-1 - Wikipedia}{https://en.wikipedia.org/wiki/SHA-1}
+\resource[SHA2]{SHA-2 - Wikipedia}{https://en.wikipedia.org/wiki/SHA-2}
+\resource[WNTLM]{NTLM - Wikipedia}{https://en.wikipedia.org/wiki/NTLM}
+\resource[WLMHash]{LM hash - Wikipedia}{https://en.wikipedia.org/wiki/LM_hash}
+\resource[WBcrypt]{Bcrypt - Wikipedia}{https://en.wikipedia.org/wiki/Bcrypt}
+\resource[Wpwdump]{pwdump - Wikipedia}{https://en.wikipedia.org/wiki/Pwdump}
+\resource[ophcrack]{ophcrack}{http://ophcrack.sourceforge.net}
+\resource[FreeRT]{Free Rainbow Tables}{https://freerainbowtables.com/articles/introduction_to_rainbow_tables/}
+\resource{mimikatz}{http://blog.gentilkiwi.com/mimikatz}
+\end{enumerate}

@@ -1,0 +1,74 @@
+\section{Identity and Access Management}\label{sec:"Identity and Access Management"}
+\subsection{Access Control}
+\subsubsection{Role-based access control}\textbf{Role-based access control}\resourcecite{WAC}\textsuperscript{,}\resourcecite{WRBAC} is using groups to assign access. When you create a user, put them in groups that automatically control access. For example the "Doctor" group provides read/write access to the Electronic Medical Record. Users in the "Administrator" group often have unrestricted access.
+\subsubsection{Separation/Segregation of duties}\textbf{Separation/Segregation of duties}\resourcecite{WSOD} is a control where no one person can single-handily take action to an damage an organization, intentionally or unintentionally.  For example, when granting a user access to an application, separate people should request, grant, implement, and audit access. The same process should be followed when creating access-control lists. When pushing code to production, a developer should not have direct access to production servers. 
+\subsubsection{Identification}\textbf{Identification} is the process by which a person or service makes a claim of identity. A username is a common method of identification. Identification does not provide any verification.
+\subsubsection{Authentication}\label{subsubsec:"Authentication"}\textbf{Authentication} is the process of verifying a person or service is who he or she claims to be. There are three factors that can be used to authenticate an account: something you know, something you have, and something you are.\\\\
+\textbf{Something you know} is a password, pass phrase, or personal identification number. It is a string of letters, numbers, characters, etc. that only you know. Something you know can be guessed. Problems with this factor include people choosing poor passwords, people forgetting passwords, people writing down passwords, and people giving others their passwords.\\\\
+\textbf{Something you have} is a token, certificate, (smart) card, or phone number. It is a physical or digital string that only you have. Something you have can be stolen or duplicated.\\\\
+\textbf{Something you are} is a retina scan, fingerprint, voice print, etc. It is a biometric signature that only you have. Something you are is hard to guess or steal, but it is also hard to input: most computers do not come with fingerprint scanners or retina scanners.\\\\
+\textbf{Where you are} is gaining traction as a fourth distinct factor for mobile devices.\\\\
+\textbf{Two-factor authentication} is any combination of two distinct factors such as a debit card and a PIN or a password and a digital certificate. Two-factor authentication is used when greater security is needed such as for large transactions, prescribing controlled substances, or remote access. Using two of the same factor, such as two passwords, does not provide the same increase in security and should be avoided. The DEA requires FIPS-approved two-factor authentication for Electronic Prescribing of Controlled Substances. PCI requires two-factor authentication for remote access.
+\subsubsection{Authorization}\textbf{Authorization} is the process of verifying a person or service has access to a specific resource. A user may have an domain account, but they must also be specifically authorized to access email or a file share. Authorization is typically controlled through an Access Control List (ACL) placed on an account or group of accounts.
+\subsubsection{Accounting}\textbf{Accounting}
+Accounting is the process of tracking what accounts accessed what resources. This is often done automatically, but is also often disabled by default. Accounting  of access to medical records is usually called auditing and contains more detail about what specific actions a user performed.
+\subsection{Single Sign-on}\textbf{Single Sign-on} (SSO) is a category of technologies that allow users to login to their computer once and use their session to login to all other applications. Apple's Keychain is an example.
+\subsection{Inactivity Timeouts}\textbf{Inactivity Timeouts} are a mechanism to disable access to information after a specific amount of inactivity time. These could be an operating system screensaver timeout or an automatic logout from an application. 
+\subsection{Account Management}
+\subsubsection{Directory Services}
+Almost all large organizations use a directory service\resourcecite{WDS} to store and manage user accounts. Most modern directory services are based on the Lightweight Directory Access Protocol (LDAP)\resourcecite{WLDAP} including Microsoft's Active Directory. The directory attempts to act as the single-sign-on account mechanism. However, in practice, most organizations rely on multiple directories and/or local accounts for some applications.\\\\
+RADIUS\resourcecite{WRADIUS} servers, discussed in \hyperref[subsubsec:"Network Access Control"]{Network Access Control} and \hyperref[subsec:"Wireless"]{Wireless}, can also be tied to your directory service to support 802.1X network authentication for wired or wireless networks. Common RADIUS servers include Microsoft Internet Authentication Service\resourcecite{WIAS} and FreeRADIUS\resourcecite{WFreeRADIUS}. DIAMETER\resourcecite{WDIAMETER} is a new verision of RADIUS.\\\\
+Federation means these directories can talk to each other. For example, the Eduroam wireless network allows faculty and staff from universities around the world to access wireless at each others' universities. Eduroam created a federated infrastructure to make this possible.
+\subsubsection{Creating Accounts}All users must have a unique account. Account creation should be part of the hiring process described in the People chapter. All vendors must also have unique accounts. These accounts should be created as part of the contracting process also described in the People chapter.
+\subsubsection{Disabling and Deleting Accounts}Accounts must be disabled promptly upon termination of an employee or contract with a third-party vendor. Accounts should also be disabled after long periods of inactivity. Accounts can be deleted or left disabled permanently.
+\subsubsection{Auditing Accounts}Periodically (typically yearly) audit all accounts. A simple way to do this is to require managers to reauthorize their employees yearly. 
+\subsubsection{Granting Access}Access should be given to accounts on a business need basis. The person requesting access, the person authorizing access, and the person implementing the change should be three separate people in order to maintain strict separation of duties. This prevents a user from granting himself or herself access to information he or she should not have access.
+\subsubsection{Disabling Access}Disable access when there is no longer a business need for the access.
+\subsubsection{Auditing Access}Check access logs to ensure users are not abusing access. The is responsibility of the privacy office in a health care organization.\\\\
+Most healthcare organizations have relatively open access to protected health information (PHI) and trust employees to self-enforce the Minimum Necessary rule. HIPAA requires organizations to keep logs of access to PHI for six years. Organizations also need a process in place to monitor these logs for improper behavior.\\\\
+\textbf{Assessment}
+\begin{description}
+\aitem{Audit accounts and their access.}
+\aitem{Verify a strong password policy is in place.}
+\aitem{Verify an inactivity timeout is in place.}
+\end{description}
+\textbf{Documentation}
+\begin{description}
+\ditem{Access Control Policy}
+\ditem{Access approvals}
+\ditem{Access addition/modification/deletion tickets}
+\end{description}
+\textbf{Risk Management}\\\\
+\begin{tabularx}{\textwidth}{ l | X }
+Threats & Controls \\
+\hline
+\tcitem{Default passwords}{System Hardening Process changes or disables all default passwords}
+\tcitem{Weak passwords}{Company policy and directory policy require complex passwords}
+\tcitem{Shared passwords}{Company policy prohibits shared passwords}
+\tcitem{Incorrect access}{Periodic audits of access}
+\end{tabularx}\vspace{5mm}
+\tccite{Default passwords}{System Hardening Process changes or disables all default passwords}
+\tccite{Weak passwords}{Company policy and directory policy require complex passwords}
+\tccite{Shared passwords}{Company policy prohibits shared passwords}
+\tccite{Incorrect access}{Periodic audits of access}
+\textbf{Resources}
+\begin{enumerate}
+\resource[WAC]{Access Control - Wikipedia}{https://en.wikipedia.org/wiki/Access_control}
+\resource[WRBAC]{Role-based access control - Wikipedia}{https://en.wikipedia.org/wiki/Role-based_access_control}
+\resource[WSOD]{Separation of duties - Wikipedia}{https://en.wikipedia.org/wiki/Separation_of_duties}
+\resource[WDS]{Directory Service - Wikipedia}{https://en.wikipedia.org/wiki/Directory_service}
+\resource[WLDAP]{LDAP - Wikipedia}{https://en.wikipedia.org/wiki/Ldap}
+\resource[WRADIUS]{RADIUS - Wikipedia}{https://en.wikipedia.org/wiki/RADIUS}
+\resource[WIAS]{Internet Authentication Service - Wikipedia}{https://en.wikipedia.org/wiki/Internet_Authentication_Service}
+\resource[WFreeRADIUS]{FreeRADIUS - Wikipedia}{https://en.wikipedia.org/wiki/FreeRADIUS}
+\resource[WDIAMETER]{Diameter protocol - Wikipedia}{https://en.wikipedia.org/wiki/Diameter_protocol}
+\resource{Discretionary access control - Wikipedia}{https://en.wikipedia.org/wiki/Discretionary_access_control}
+\resource{Mandatory access control - Wikipedia}{https://en.wikipedia.org/wiki/Mandatory_access_control}
+\resource{OAuth - Wikipedia}{https://en.wikipedia.org/wiki/OAuth}
+\resource{OpenAM - Wikipedia}{https://en.wikipedia.org/wiki/OpenAM}
+\resource{OpenAM}{https://forgerock.org/openam/}
+\resource{Security Assertion Markup Language - Wikipedia}{https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language}
+\resource{Shibboleth - Wikipedia}{https://en.wikipedia.org/wiki/Shibboleth_(Internet2}
+\resource{Shibboleth}{http://shibboleth.net}
+\resource{WS-Federation - Wikipedia}{https://en.wikipedia.org/wiki/WS-Federation}
+\end{enumerate}

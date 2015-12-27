@@ -1,0 +1,330 @@
+\section{Networks}\label{sec:"Networks"}
+Salespeople would like for you believe this section is all about gear. It's not. The right gear is often free or inexpensive. More money spent on gear does not equate to a more secure network.
+\label{subsec:"Security Zones"}\subsection{Security Zones}
+\hyperref[sec:"Your First Day"]{Your First Day} introduced two information security concepts we will now apply to Network Security, the CIA Triad and Information Classification. Networks make information available to many users. We must properly configure controls to protect the confidentiality and integrity of that information. Also, redundancy of network components (multiple internet connections, load balancers, etc.) increases availability.\\\\
+The security community often describes information security as an onion. You have to carefully peel back several layers of controls for access to sensitive information. Another phrase for the same concept is defense in depth. The onion analogy works well in network security. In network security, the layers of the onion are security zones defined by Access Control Lists (ACLs) on firewalls. (Some organizations save money by using routers instead of firewalls. Avoid this practice.) ACLs are rules that explicitly allow traffic from one host or network to another host or network (optionally on specific ports). Ideally, we would create a unique security zone for each host and carefully craft ACLs to restrict network traffic to and from that host. However, this would be overly burdensome so we create security zones for similar hosts and group them together. Security zones are visualized with network diagrams. \\\\
+Public IP addresses are those that can be routed across the public Internet. These IP addresses are unique to each organization and may not be reused. Private IP addresses\resourcecite{WPN} (also called RFC 1918\resourcecite{RFC1918} addresses) may only be used for internal networks. Network address translation\resourcecite{WNAT} (NAT) allows computers with private address to connect to the public Internet by using the IP address of a gateway. Private IP addresses provides an important security mechanism by allowing internal computers to "hide" behind the gateway. This creates our most basic security zones, public and private. \\\\
+Whitelists\resourcecite{WWL} and blacklists\resourcecite{WBL} are two specific Access Control Lists. Whitelists allow all traffic to or from a particular host or network. They can be useful when troubleshooting or performing security testing. However, whitelists are often accidentally left in place longer than necessary. Blacklists, the opposite of whitelists, block all traffic. They are great for protecting networks' confidentiality and integrity, but they severely limit availability. Exceptions are required for every access allowed through the blacklist. In Cisco ACL syntax, whitelists and blacklists are "permit ip any any" and "deny ip any any" respectively.\\\\
+Here are the four basic security zones:
+\subsubsection{Public / External / Untrusted / Internet}
+\begin{description}
+\item This security zone is for information suitable for public consumption by everyone in the world. E.g. Internet router, public wifi access
+\item Confidentiality risk is not important.
+\item Public IP addresses are used for Internet networks.
+\end{description}
+\subsubsection{DMZ}
+\begin{description}
+\item This security zone\resourcecite{WDMZ} is for information that has confidentiality risk, but needs to be accessible to authorized users around the world. E.g. Email gateways, web servers
+\item Availability and Confidentiality are both important.
+\item Public or private IP addressees can be used for DMZ networks.
+\item A multi-tier DMZ takes this concept a step further and creates an additional security zone for database servers separate from internet-accessible web servers.
+\end{description}
+\subsubsection{Private / Internal / Trusted}
+\begin{description}
+\item This security zone is for information that has confidentiality risk, but does not need to be accessible outside your network. E.g. internal web servers, file servers, database servers, workstations, sensitive information (Protected Health Information, Cardholder Data, etc.)
+\item Confidentiality is more important than Availability.
+\item Private IP addresses are typically used for internal networks.
+\item PCI requires stageful firewalls to protect the cardholder data environment.
+\end{description}
+\subsubsection{Isolated}
+\begin{description}
+\item This security zone is for information where confidentiality and integrity risk greatly outweighs availability. E.g. alarm systems, medical devices
+\item Isolated networks may have a connection to another network, but access must be strictly controlled. For example, an alarm system may be allowed access out to one host on the Internet. A medical device may not need network access at all.
+\item Private IP addresses are typically used for isolated networks.
+\end{description} 
+\textbf{Assessment}
+\begin{description}
+\aitem{Test access between security zones to verify Access Control Lists.}
+\end{description}
+\textbf{Documentation}
+\begin{description}
+\ditem{Network inventory: document the security zones available on each network device.}
+\aitem{Computer inventory: document what security zone each computer belongs in.}
+\end{description}
+\textbf{Risk Management}\\\\
+\begin{tabularx}{\textwidth}{ X | X }
+Threats & Controls \\
+\hline
+\tcitem{Any network attack}{Firewalls with Access Control Lists}
+\end{tabularx}\vspace{5mm}
+\tccite{Any network attack}{Firewalls with Access Control Lists}
+\textbf{Stories}
+\begin{description}
+\item I connect to a hospital's improperly configured guest wireless network that allows traffic to their private network. An internal file server was also improperly configured to not require authentication and contained files with Protected Health Information (PHI). Anyone within wifi range of the hospital could access PHI without any authentication or logging.
+\end{description}
+\textbf{Resources}
+\begin{enumerate}
+\resource[WPN]{Private Network - Wikipedia}{https://en.wikipedia.org/wiki/Private_network}
+\resource[RFC1918]{RFC 1918}{http://tools.ietf.org/html/rfc1918}
+\resource[WNAT]{Network Address Translation - Wikipedia}{https://en.wikipedia.org/wiki/Network_address_translation}
+\resource[WDMZ]{DMZ (Computing) - Wikipedia}{https://en.wikipedia.org/wiki/DMZ_(computing)}
+\resource[WWL]{Whitelist - Wikipedia}{https://en.wikipedia.org/wiki/Whitelist}
+\resource[WBL]{Blacklist (Computing) - Wikipedia}{https://en.wikipedia.org/wiki/Blacklist_(computing)}
+\end{enumerate}
+\label{subsec:"Security Zone Examples"}\subsection{Security Zone Examples}
+Two basic examples of security zones:
+\begin{center}
+\begin{figure}[ht]
+\begin{verbatim}
+                     +------------------+
+                     |     Internet     |
+                     +------------------+
+                              |
+                     +------------------+    +-----+
+                     |     Firewall     | == | DMZ |
+                     +------------------+    +-----+
+                              |
+                              |             ++----------++
+                     +------------------+   ++----------++
+                     |     Private      |   || Isolated ||
+                     +------------------+   ++----------++
+                                            ++----------++
+\end{verbatim}
+\caption{Use one firewall with three interfaces to create three security zones. The Internet-facing security zone is the least protected, followed by the DMZ, and the Private security zone is the most protected. The isolated zone is not connected to any other security zone.}
+\end{figure}
+\end{center}
+\clearpage
+\begin{center}
+\begin{figure}[ht]
+\begin{verbatim}
+                     +------------------+
+                     |     Internet     |
+                     +------------------+
+                              |
+                     +------------------+
+                     |     Firewall     |
+                     +------------------+
+                              |
+                     +------------------+
+                     |       DMZ        |
+                     +------------------+ 
+                              |
+                     +------------------+
+                     |     Firewall     |
+                     +------------------+
+                              |              ++----------++
+                     +------------------+    ++----------++
+                     |     Private      |    || Isolated ||
+                     +------------------+    ++----------++
+                                             ++----------++ 
+\end{verbatim}
+\caption{Use two firewalls with two interfaces each to create three security zones. The Internet-facing security zone is the least protected, followed by the DMZ, and the Private security zone is the most protected. The isolated zone is not connected to any other security zone.}
+\end{figure}
+\end{center}
+\label{subsec:"Internet-accessible Services"}\subsection{Internet-accessible Services}
+Internet-accessible services are any services that can be accessed from the public Internet. These services are most likely to be attacked because billions of people on the Internet can access them. Therefore they need extra controls.\\\\
+Create a Public IP address request process to document these services in your network inventory. Document the business need, business owner, technical owner, public IP address, private IP address, and ports/services available to the Internet. Verify this information yearly. Services must also be vulnerability scanned before they are opened to the Internet, and they must be rescanned periodically and whenever changes are made.\\\\
+Intenet-accessible services belong in a DMZ security zone. They should never be placed in a public security zone or a private security zone because these configuration negate the premise of security zones. Create individual DMZs for each server if possible.\\\\
+Only services that need to be accessible to everyone should be allowed access from the Internet. These services include public web servers, public DNS servers, email gateways, VPN endpoints, and video conference gateways. Other services such as internal web servers, file servers, and database servers, must be located in the private security zone and should be remotely accessed by a VPN. Even this access should only be allowed if necessary. (Please see the section \hyperref[subsec:"Virtual Private Networks"]{Virtual Private Networks} below for more information on VPNs.) Services such as  web mail are often Internet-accessible. However, this configuration allows anyone access to break into web mail which usually contains sensitive information. Instead put these services in a private security zone and require a VPN to access them.\\\\
+Run two sets of DNS services to separate public DNS from private DNS. This configuration is referred to as split-DNS. Public DNS servers must not provide private IP addresses for computers in your DMZ or private security zones.\\\\
+\textbf{Assessment}
+\begin{description}
+\aitem{Ping scan your public IP address space from outside your network to see what hosts respond.}
+\begin{verbatim}nmap -–sP 1.2.3.0/24\end{verbatim}
+\aitem{Port scan your public IP address space from outside your network to see what services respond.}
+\begin{verbatim}nmap 1.2.3.0/24\end{verbatim}
+\end{description}
+\textbf{Documentation}
+\begin{description}
+\ditem{Network Inventory: Document the business need, business owner, technical owner, public IP address, private IP address, and ports/services for each internet-accessible service.}
+\end{description}
+\textbf{Risk Management}\\\\
+\begin{tabularx}{\textwidth}{ X | X }
+Threats & Controls \\
+\hline
+Any internet attack & Public IP address request process \\ & Vulnerability scans\\ & Firewalls with Access Control Lists
+\end{tabularx}\vspace{5mm}
+\textbf{Stories}
+\begin{description}
+\item Many organizations allow access to webmail services to anyone on the internet. A simple social engineering attack provides access to a user's email account.
+\item An organization improperly allowed internet access to their development web server that was running out-of-date software and was configured with default credentials. This server could then access the properly secured production web servers that contained sensitive information.
+\end{description}
+\subsection{Internal Access Control}
+Creating a strong perimeter is only part of building a secure network. Onions have multiple layers. Internal Access Control limits access between computer in the private security zone. Often, the greatest threats are within your own organization: your employees' compromised computers for example.\\
+Within the private security zone, create additional security zones to protect high-risk computers. Use Access Control Lists on internal firewalls or routers to control access between separate Virtual LANs\resourcecite{WVLAN} (VLANs) for separate computers. Very high-risk computers should be placed in isolated security zones.\\\\
+Some organizations have a process for requesting private IP addresses and access to the private security zone similar to the process described above for public IP addresses. This is recommended, but not required.
+\subsubsection{Host-based Firewalls}
+A host-based firewall is a software firewall running on a computer that allows you to create Access Control Lists for that specific computer. Depending on the host-based firewall, you can create ingress rules, egress rules, or both. They are the closest most organizations can get to creating a security zone for each computer. Common host-based firewalls include Windows Firewall, Mac OS X's firewall, and Linux's IP Tables\resourcecite{WIPTables}. Host-based firewalls should be enabled on all computers on your network.
+\subsubsection{Network Access Control}\label{subsubsec:"Network Access Control"}
+Network Access Control\resourcecite{WNAC} (NAC) prevents unauthorized users with physical access to a ethernet port from accessing your network. Newer systems can also require computers to be running up-to-date anti-virus or other software before they are allowed network access. They can even assign a computer to a specific VLAN based on these checks. The underlying protocol behind network access control is IEEE 802.1X\resourcecite{W8021x} and it typically requires a RADIUS server for user management. Users have to enter their username and password, or other credentials, to access the network. Network access control is rarely implemented. If you don't use NAC, disable all unused Ethernet ports. It is also possible to control network access by limiting the MAC addresses of computers that are allowed access to the network, limiting MAC addresses of computers that are given DHCP addresses, and/or requiring static IP addresses. However, all of these techniques can be easily circumvented by copying a MAC address or IP address from an existing computer.\\\\
+\textbf{Assessment}
+\begin{description}
+\aitem{Ensure high-risk computers have additional network protections.}
+\aitem{Ensure all computer are running host-based firewalls.}
+\aitem{Attempt to gain access to the network from publicly-accessible Ethernet ports in a lobby, conference room, or cafeteria.}
+\end{description}
+\textbf{Documentation}
+\begin{description}
+\ditem{Computer inventory: Document any additional network protections for high-risk computers.}
+\end{description}
+\textbf{Risk Management}\\\\
+\begin{tabularx}{\textwidth}{ X | X }
+Threats & Controls \\
+\hline
+\tcitem{Attacks from within the private security zone}{Internal Access Control and Host-based firewalls}
+\tcitem{Publicly-accessible Ethernet ports}{Network Access Control}
+\end{tabularx}\vspace{5mm}
+\textbf{Stories}
+\begin{description}
+\item I walk into a bank's conference room and plug a laptop into their Ethernet port. When asked by a branch manager why I am there, I reply "I'm here early for a meeting." Her response is "OK, just don't plug your computer into the wall" although she doesn't see it is already connected. Thankfully they have Network Access Control which prevents my computer from accessing their network.
+\end{description}
+\textbf{Resources}
+\begin{enumerate}
+\resource[WVLAN]{VLAN - Wikipedia}{https://en.wikipedia.org/wiki/Vlan}
+\resource[WIPTables]{IP Tables - Wikipedia}{https://en.wikipedia.org/wiki/Iptables}
+\resource[WNAC]{Network Access Control - Wikipedia}{https://en.wikipedia.org/wiki/Network_access_control}
+\resource[W8021x]{802.1x - Wikipedia}{https://en.wikipedia.org/wiki/802.1x}
+\end{enumerate}
+\subsection{Wireless}\label{subsec:"Wireless"}
+Most organizations provide wireless network\resourcecite{WWLAN}\textsuperscript{,}\resourcecite{W80211} access to their employees and/or guests. Wireless is a convenient way to access the network. Wireless can be configured in the following three ways (with accompanying security zone): employee wireless (internal), guest wireless (public), and isolated wireless (isolated). These networks should be created on separate SSIDs.
+\subsubsection{Employee wireless}
+Configure this network so clients can access the private security zone. Use Wi-Fi Protected Access 2\resourcecite{WWPA} (WPA2) to authenticate access to the network and encrypt communications. There are two versions of WPA2: WPA2 Personal and WPA2 Enterprise. As their names imply, WPA2 Personal is designed for home or small office use. WAP2 Enterprise is designed for large organization with centralized authentication services.\\
+\begin{mdframed}\begin{tabularx}{\textwidth}{ p{1.9cm} | p{2.8cm} | p{2.3cm} | p{2.2cm} | p{2cm} }
+ & Authentication & Pros & Cons & Encryption \\
+\hline
+WPA2 Personal & Pre-shared key &  Easy setup & Shared password & AES \\
+\hline
+WPA2 Enterprise & 802.1X & Individual accounts & Requires RADIUS server & AES
+\end{tabularx}\end{mdframed}
+Do not use Wired Equivalent Privacy\resourcecite{WWEP} (WEP) or WPA. They rely on less secure authentication and encryption protocols. Additionally, hidden SSIDs\resourcecite{WSSID} are not an effective control: they are easy to find.\\\\
+Train employees to use the employee wireless network and not the guest wireless network.
+\subsubsection{Guest wireless}
+Configure guest wireless so clients can only access the public security zone.
+\subsubsection{Isolated wireless}
+Isolated wireless networks must only be created for a specific need. Configure isolated wireless so clients cannot access public or private security zones.
+\subsubsection{Rouge access points}
+Rogue access points\resourcecite{WRogue} are unauthorized wireless networks. There are two types:
+\begin{itemize}
+\item Access points connected to the private security zone that allow unauthorized access to the private security zone.
+\item Access points named similar to authorized access points that attempt to trick your employees to join them. These networks are used for man-in-the-middle attacks.
+\end{itemize}
+Periodically assess your locations for rogue access points. There are products to help automate these assessments.\\\\
+\textbf{Assessment}
+\begin{description}
+\aitem{Ensure employee, guest, and isolated wireless networks are in the correct security zones and do not have access to unauthorized security zones.}
+\aitem{Ensure the employee wireless network requires authentication and encrypts traffic.}
+\aitem{Ensure employees are not using the guest wireless network.}
+\aitem{Ensure there are no rouge access points within wireless range.}
+\end{description}
+\textbf{Documentation}
+\begin{description}
+\ditem{Information security policy: Do not allow rogue access points.}
+\end{description}
+\textbf{Risk Assessment}\\\\
+\begin{tabularx}{\textwidth}{ l | X }
+Threats & Controls \\
+\hline
+\tcitem{Weak Encryption}{WPA2}
+\tcitem{Any attack from guest wireless}{Firewalls with Access Control Lists}
+\tcitem{Rouge access points}{Periodic scans for rouge access points} 
+\end{tabularx}\vspace{5mm}
+\tccite{Weak Encryption}{WPA2}
+\tccite{Any attack from guest wireless}{Firewalls with Access Control Lists}
+\tccite{Rouge access points}{Periodic scans for rouge access points} 
+
+\textbf{Resources}
+\begin{enumerate}
+\resource[WWLAN]{Wireless LAN - Wikipedia}{https://en.wikipedia.org/wiki/Wireless_LAN}
+\resource[W80211]{IEEE 802.11 - Wikipedia}{https://en.wikipedia.org/wiki/IEEE_802.11}
+\resource[WWPA]{Wi-Fi Protected Access - Wikipedia}{https://en.wikipedia.org/wiki/Wi-Fi_Protected_Access}
+\resource[WWEP]{Wired Equivalent Privacy - Wikipedia}{https://en.wikipedia.org/wiki/Wired_Equivalent_Privacy}
+\resource[WSSID]{Service set (802.11 network) - Wikipedia}{https://en.wikipedia.org/wiki/Service_set_(802.11_network)}
+\resource[WRogue]{Rogue Access Point - Wikipedia}{https://en.wikipedia.org/wiki/Rogue_access_point}
+\end{enumerate}
+\subsection{Virtual Private Networks}\label{subsec:"Virtual Private Networks"}
+A Virtual Private Network\resourcecite{WVPN} (VPN) is a way to bridge two private security zones across a public security zone. This is typically done by encrypting all traffic that traverses the public security zone. VPNs are used to connect a company's network between remote sites, to connect two different companies' networks, or to allow users to remotely connect to their company's network.
+\begin{verbatim}
+                     +------------------+
+                     |     Private      |
+                     +------------------+
+                              |
+                     +------------------+
+                     |    VPN Device    |
+                     +------------------+
+                             | |
+                         (encrypted)
+                             | |
+                     +------------------+
+                     |      Public      |
+                     +------------------+ 
+                             | |
+                         (encrypted)
+                             | |
+                     +------------------+
+                     |    VPN Device    |
+                     +------------------+
+                              |             
+                     +------------------+ 
+                     |     Private      | 
+                     +------------------+ 
+\end{verbatim}
+VPNs used to be created using the Point-to-Point Tunneling Protocol\resourcecite{WPPTP} (PPTP) and then the Layer 2 Tunneling Protocol\resourcecite{WL2TP} (L2TP). These protocols are built into Windows, Mac OS, and Linux. However, they do not explicitly require encryption and have other shortcomings. Most modern VPNs use IP Security\resourcecite{WIPSec} (IPSec). They should also use AES for the encryption protocol if possible.\\\\
+A VPN that connects different sites within one company should implement the same internal access control as described above. However, also consider that differences in physical security, network access control, or other issues between different sites may require different internal access controls.\\\\
+A VPN that connects two different companies across the Internet must also implement access control. Both companies should create the VPN in their respective DMZ networks. Access to internal resources should be explicitly allowed just as with other systems located in a DMZ.
+\subsubsection{Remote Access}
+Remote access allows users from an untrusted network such as the Internet to access resources behind the perimeter. This is fundamentally against everything discussed in \hyperref[subsec:"Security Zones"]{Security Zones}. This should give you pause. However, remote access is often a necessity.\\\\
+Remote access was originally accomplished through something like Telnet\resourcecite{WTelnet}. However, most users want a graphical user interface, Telnet is unencrypted, and Telnet authentication is typically just a username and password. For these reasons, modern remote access is typically configured to use a VPN, either and IPSec VPN or an SSL VPN. As noted above, either option should be configured to use AES.  Also, consider requiring multi-factor authentication for remote access. Please see \hyperref[subsubsec:"Authentication"]{Authentication} for more infomation on multi-factor authentication. PCI requires multi-factor authentication for remote access to the cardholder data environment.\\\\
+Also, remote access should not allow complete access to the internal network. Remote access users should be placed in a DMZ network with access to limited services such as email and file servers. Create multiple DMZs for different user roles if necessary. Many organizations allow remote access users to connect to their desktop computers at the office via a protocol such as Microsoft's Remote Desktop\resourcecite{WRDS}, Virtual Network Computing\resourcecite{WVNC} (VNC), or Secure Shell\resourcecite{WSSH} (SSH).  They can then access any internal resources from their desktop. Some organizations  publish a Citrix\resourcecite{WCitrix} desktop to remote access users. This may be the same Citrix desktop they use at work.\\\\
+Some organizations only allow remote access from company computers because personal computers may not be running the same security software or configurations. Additionally, some organizations require users to sign a separate acceptable use agreement governing remote access.
+\\\\Many users are opting to use personal remote access products such as Go2MyPC for remote access. These products create a backdoor into the internal network. Restrict the use of these products in your acceptable use policy and consider monitoring the network for traffic using these services.\\\\
+\textbf{Resources}
+\begin{enumerate}
+\resource[WVPN]{Virtual Private Network - Wikipedia}{https://en.wikipedia.org/wiki/Virtual_private_network}
+\resource[WPPTP]{PPTP - Wikipedia}{https://en.wikipedia.org/wiki/Pptp}
+\resource[WL2TP]{L2TP - Wikipedia}{https://en.wikipedia.org/wiki/L2TP}
+\resource[WIPSec]{IPSec - Wikipedia}{https://en.wikipedia.org/wiki/Ipsec}
+\resource[WTelnet]{Telnet - Wikipedia}{https://en.wikipedia.org/wiki/Telnet}
+\resource[WRDS]{Remote Desktop Services - Wikipedia}{https://en.wikipedia.org/wiki/Remote_Desktop_Services}
+\resource[WVNC]{VNC - Wikipedia}{https://en.wikipedia.org/wiki/Vnc}
+\resource[WSSH]{Secure Shell - Wikipedia}{https://en.wikipedia.org/wiki/Secure_Shell}
+\resource[WCitrix]{Citrix XenAPP - Wikipedia}{https://en.wikipedia.org/wiki/Citrix_XenApp}
+\end{enumerate}
+\subsection{Network Devices}
+This is the gear section. Time to break out the checkbook. Unless you're the open source type in which case most of the gear you need is a COTS PC. Follow your \hyperref[subsec:"Network Device Hardening Process"]{Network Device Hardening Process} when configuring network devices.
+\subsubsection{Application Firewalls}
+Application Firewalls\resourcecite{WAF} are network security devices that monitor and manipulate traffic higher than layer 3/4. Web Application Firewalls are the most common Application Firewalls and they can prevent common web application attacks. Please see \hyperref[subsec:"Internally-developed Applications"]{Internally-developed Applications} for more information on web application attacks.
+\subsubsection{Logging and Monitoring}
+Configure all your network devices to log\resourcecite{80092} to a central server using Syslog\resourcecite{WSyslog}. Consider several Syslog servers for different security zones. Additionally, configure all network devices for Network Time Protocol (NTP)\resourcecite{WNTP}. NTP guarantees logs from different devices reference the same time source. Also configure server logs to log to a central server. Monitor these logs regularly for any anomalies. Simple Network Management Protocol (SNMP)\resourcecite{WSNMP} provides similar logging functionality to Syslog. Last, Nagios\resourcecite{Nagios}\textsuperscript{,}\resourcecite{WNagios} is a great network monitoring tool.\\\\
+Network traffic can be viewed as Netflow\resourcecite{WNetflow}\textsuperscript{,}\resourcecite{NetflowTools} (or IPFIX\resourcecite{WIPFIX} or sFlow\resourcecite{WsFlow}) or packet captures (pcap)\resourcecite{WPcap}. Netflow data is available from many types of network devices and is limited to little more than source and destination information. Pcap files, on-the-other-hand, contain entire packets. Most organizations can store Netflow data from critical firewalls and routers for a year or more. However, pcap data for one or two critical links can often only be stored for a week because of storage limitations. Pcap files from network device links are often created by IDS or IPS devices (see below). Pcap files can also be created on a computer's own network links using tcpdump\resourcecite{Wtcpdump} or Wireshark\resourcecite{WWireshark}\resourcecite{NoWireshark}. Also, ngrep\resourcecite{Wngrep} is a great tool for searching inside pcap files similar to grep for regular files. Use SiLK\resourcecite{SiLK} to investigate Netflow data.
+\subsubsection{Intrusion Detection and Intrusion Prevention}
+Intrusion detection (IDS)\resourcecite{WIDS}\textsuperscript{,}\resourcecite{80094} refers to a device's capability to detect malicious network traffic through pattern recognition, signatures, or other methods. Often network traffic from core switches and routers will be mirrored to an IDS. Intrusion prevention (IPS)\resourcecite{WIPS} takes IDS a step further by actively reconfiguring access control lists to block malicious traffic. The risk of an IPS is that availability may be compromised if legitimate traffic is blocked. However, confidentiality, availability, or integrity of the network as a whole may be increased. All of these systems must be tuned to work effectively in your environment. IDS and IPS capabilities can be built into network devices such as firewalls or separate stand-alone devices. IDS and IPS logs must be sent to a central logging server just like other network devices and servers. Snort\resourcecite{Snort}\textsuperscript{,}\resourcecite{WSnort} and Suricata\resourcecite{Suricata} an open source IDS.\\\\
+There are typically three ways an IDS or IPS device can be connected to your network: inline transparent, inline routing, or tap. The two inline modes work by connecting a network link through the IDS or IPS device. In the transparent mode, the device does not modify traffic except when traffic is blocked. In routing mode, the device functions a router and can also block traffic. In tap mode, the device is connected to a mirrored port on another network device such as a firewall, router, or switch. The other device copies all traffic through one or more ports and sends that copy out the mirrored port. All IDS and IPS devices in tap mode cannot block traffic and function as IDS devices only.\\\\
+Security Onion\resourcecite{SecurityOnion} is a Linux distribution that offers intrusion detection, network monitoring, and logging.
+\subsubsection{Security Information and Event Management}
+Security Information and Event Management (SIEM)\resourcecite{WSIEM} refers to a more comprehensive logging and monitoring solution. These systems typically correlate logs and alerts from numerous types of network devices, servers (Windows Event Logs and Syslogs), and application and attempt to tie together security events.
+\subsubsection{Proxy Servers and Web Filters}
+Proxy servers intercept communications between users and servers. The most common proxy server is a caching web proxy server. This server intercepts all the web traffic leaving the perimeter. The server can then respond quicker to user requests if it sees two users that are visiting the same site. Some organizations require all web traffic to go through proxy servers so they can filter the traffic. Other organizations buy devices that are purpose-built for filtering web traffic. All of these devices can be used to enforce policies regarding web access. Web Cache Communication Protocol (WCCP)\resourcecite{WWCCP} is a control that can automatically send web traffic through a proxy server.
+\subsubsection{Data Loss Prevention}\label{subsubsec:"Data Loss Prevention"}
+Data loss prevention (DLP)\resourcecite{WDLP} is a category of software that attempts to locate sensitive data and detect and limit where it can go. DLP usually operates by scanning files servers and computers connected to the network, or by listening to network traffic, or both.\\\\
+\textbf{Resources}
+\begin{enumerate}
+\resource[WAF]{Application Firewall - Wikipedia}{https://en.wikipedia.org/wiki/Application_firewall}
+\resource[80092]{NIST Special Publication 800-92 Guide to Computer Security Log Management}{http://csrc.nist.gov/publications/nistpubs/800-92/SP800-92.pdf}
+\resource[WSyslog]{Syslog - Wikipedia}{https://en.wikipedia.org/wiki/Syslog}
+\resource[WNTP]{Network Time Protocol - Wikipedia}{https://en.wikipedia.org/wiki/Network_Time_Protocol}
+\resource[WSNMP]{Simple Network Management Protocol - Wikipedia}{https://en.wikipedia.org/wiki/Snmp}
+\resource[Nagios]{Nagios}{http://www.nagios.org}
+\resource[WNagios]{Nagios - Wikipedia}{https://en.wikipedia.org/wiki/Nagios}
+\resource[WNetflow]{Netflow - Wikipedia}{https://en.wikipedia.org/wiki/Netflow}
+\resource[NetflowTools]{Freeware NetFlow Software - Cisco}{http://www.cisco.com/c/en/us/products/ios-nx-os-software/ios-netflow/networking_solutions_products_genericcontent0900aecd805ff72b.html}
+\resource[WIPFIX]{IP Flow Information Export}{https://en.wikipedia.org/wiki/IP_Flow_Information_Export}
+\resource[WsFlow]{SFlow - Wikipedia}{https://en.wikipedia.org/wiki/SFlow}
+\resource[WPcap]{Pcap - Wikipedia}{https://en.wikipedia.org/wiki/Pcap}
+\resource[Wtcpdump]{tcpdump - Wikipedia}{https://en.wikipedia.org/wiki/Tcpdump}
+\resource[WWireshark]{Wireshark - Wikipedia}{https://en.wikipedia.org/wiki/Wireshark}
+\resource[NoWireshark]{No Wireshark? No TCPDump? No Problem!}{https://isc.sans.edu/diary/No+Wireshark\%3F+No+TCPDump\%3F+No+Problem\%21/19409}
+\resource[Wngrep]{ngrep - Wikipedia}{https://en.wikipedia.org/wiki/Ngrep}
+\resource[SiLK]{SiLK}{http://tools.netsa.cert.org/silk/index.html}
+\resource[WIDS]{Intrusion Detection System - Wikipedia}{https://en.wikipedia.org/wiki/Intrusion_detection_system}
+\resource[80094]{NIST Special Publication 800-94 Guide to Intrusion Detection and Prevention Systems (IDPS)}{http://csrc.nist.gov/publications/nistpubs/800-94/SP800-94.pdf}
+\resource[WIPS]{Intrusion Prevention System - Wikipedia}{https://en.wikipedia.org/wiki/Intrusion_prevention_system}
+\resource[Snort]{Snort}{https://www.snort.org}
+\resource[WSnort]{Snort - Wikipedia}{https://en.wikipedia.org/wiki/Snort_(software)}
+\resource[Suricata]{Suricata}{http://suricata-ids.org}
+\resource[SecurityOnion]{Security Onion}{http://blog.securityonion.net/p/securityonion.html}
+\resource[WSIEM]{Security Information and Event Management - Wikipedia}{https://en.wikipedia.org/wiki/Security_Information_and_Event_Management}
+\resource[WWCCP]{Web Cache Communication Protocol - Wikipedia}{https://en.wikipedia.org/wiki/Web_Cache_Communication_Protocol}
+\resource[WDLP]{Data Loss Prevention - Wikipedia}{https://en.wikipedia.org/wiki/Data_loss_prevention_software}
+\resource{http://www.fluentd.org}{fluentd}
+\resource{Port Mirroring - Wikipedia}{https://en.wikipedia.org/wiki/Port_mirroring}
+\end{enumerate}

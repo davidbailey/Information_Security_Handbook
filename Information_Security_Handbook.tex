@@ -1,0 +1,64 @@
+\documentclass[12pt]{article}
+\title{Information Security Handbook}
+\author{David Bailey}
+\date{\today}
+\usepackage[utf8]{inputenc}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\usepackage{mdframed}
+\usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{multirow} 
+\usepackage{rotating}
+\usepackage{lscape}
+\usepackage{imakeidx}
+\usepackage{tikz}
+
+\indexsetup{level=\section}
+\makeindex[name=TC,title=List of Threats and Controls,columns=1,noautomatic]
+\makeindex[name=A,title=List of Network Security Assessment Items,columns=1,noautomatic]
+\makeindex[name=D,title=List of Documentation Items,columns=1,noautomatic]
+\newcommand{\tcitem}[2]{#1 & #2\\}
+\newcommand{\tccite}[2]{\index[TC]{#1 -- #2}}
+\newcommand{\aitem}[1]{\item #1 \index[A]{#1}}
+\newcommand{\ditem}[1]{\item #1 \index[D]{#1}}
+\newcommand{\resourcecite}[1]{\hyperref[itm:Resource:#1]{\textsuperscript{\ref{itm:Resource:#1}}}}
+\newcommand{\resource}[3][null]{\item #2\\\url{#3}\label{itm:Resource:#1}}
+
+\begin{document}
+\maketitle
+\newpage
+\input{./tex/License.tex}
+\newpage
+\tableofcontents
+\newpage
+\input{./tex/YourFirstDay.tex}
+\newpage
+\input{./tex/PoliciesandProcesses.tex}
+\newpage
+\input{./tex/AssessmentsAuditsandAnalyses.tex}
+\newpage
+\input{./tex/Networks.tex}
+\newpage
+\input{./tex/Computers.tex}
+\newpage
+\input{./tex/IdentityandAccessManagement.tex}
+\newpage
+\input{./tex/Cryptography.tex}
+\newpage
+\input{./tex/Physical.tex}
+\appendix
+\newpage
+\input{./tex/TheAnatomyofanAttack.tex}
+\newpage
+\input{./tex/SANSCriticalSecurityControls-Version5.tex}
+\newpage
+\input{./tex/OWASPTop102013.tex}
+\newpage
+\input{./tex/MozillaWikiRecommendedTLSConfigurations.tex}
+\newpage
+\input{./tex/CISSPDomainsMapping.tex}
+%\printindex[TC]
+%\printindex[A]
+%\printindex[D]
+\end{document}

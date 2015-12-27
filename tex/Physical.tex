@@ -1,0 +1,62 @@
+\section{Physical}\label{sec:"Physical"}
+Physical security\resourcecite{WPhysicalSecurity}, arguably the most critical topic in this handbook, protects  information at rest and in transit. All the other controls in this handbook (except maybe encryption) are moot if an attacker has physical access to your computers and network. Physical security extends everywhere you organization's information exists: hospitals, clinics, offices, employee's homes, laptops in employee's cars, etc. Physical security is often a separate department from information security; however, the two must work together to ensure information is secure. \\\\
+Manage physical security, like the other sections of this handbook, with Risk Management. Primary threat sources are attackers, malicious employees, and natural disasters Threat events include theft, vandalism, fires, earthquakes, hurricanes, tornadoes, tsunamis, floods, power outages, plane crashes, car crashes, etc. Controls are backups, encryption, walls, doors, locks, guards (armed, unarmed, receptionists), cameras, alarm systems, badges, employees, etc. Also consider the location of your sites. Are natural disasters common? Are you in a high-crime area? Educate your employees to question and report visitors' and fellow employees' suspicious behavior. Consider controls from other sections such as Network Access Control and requiring employees to store files on network file shares instead of desktops and laptops. Last, network booting\resourcecite{WNetboot} eliminates risks to hard drives in computers by removing those drives.
+\subsection{Data Centers, Server Rooms, and Wiring Closets}
+Computers, like people, perform best in well designed spaces. While desktops and laptops are fine occupying the same space as people, computers in data centers, server rooms, and wiring closets require special designs. They need access control, redundant power and cooling, and fire suppression in case of a fire. Also consider video cameras.
+\subsubsection{Access Control}
+Control physical access to data centers, server rooms and wiring closets. Locate these rooms away from exterior walls, especially windows. Ensure the walls of these rooms extend from the floor to the ceiling, not just to a false ceiling. Ensure these rooms have sturdy doors and locks with limited access. Log access to these rooms with sign-in/sign-out sheets, logs from electronic locks, or video cameras.
+\subsubsection{Power}
+Most of the time, the electric utility provides reliable power for data centers, server rooms, and wiring closets. However, no utility guarantees 100\% uptime. Uninterpretable power supplies (UPS)\resourcecite{WUPS} provide instant battery backup power. They can be small units attached to individual computers or large units that provide power for a room. However, batteries are expensive and cannot provide long-term power. Emergency power systems\resourcecite{WEPS}, such as generators, use energy-dense fuel (diesel, gasoline, or natural gas) to provide long-term power. Size UPSs and emergency power systems appropriately and test them regularly.
+\subsubsection{Cooling}
+Computers, especially hard drives, crash if the ambient temperature is too high. Computers also generate lots of heat. Ensure data centers, server rooms, and wiring closets have enough cooling to keep their contents cool. Also, consider redundant cooling units in case a unit fails or requires service. Last, ensure cooling systems have backup power. If not, computers and network devices will continue to run during a power outage and quickly overheat the room. Heating, ventilation, and air condition (HVAC)\resourcecite{WHVAC} describe the mechanical environmental controls of a building.
+\subsubsection{Fire Suppression}
+Hope for the best, but prepare for the worst. Fire suppression systems protects data centers, server rooms, and wiring closets and their contents from fire damage. Water sprinklers can extinguish a fire, but they will also damage network devices and computers in the room. If you have sprinklers in a data center or server rooms, ensure you have an off-site backup of any information stored in the room. Also ensure you have backup hardware stored off-site.\\\\
+Non-water-based fire suppression systems are common in data centers and server rooms because they will not damage the contents of the room when they discharge. Halon was the most popular non-water-based agent, but it caused health and environmental damage. FM-200\resourcecite{WFM200} is now the most popular agent. The installer of a non-water-based system sizes the system based on the size of the room. Always consult fire codes before changing fire suppression systems.\\\\
+\textbf{Assessment}
+\begin{itemize}
+\aitem{Physical security assessments begin with a tour. Imagine yourself in many roles: patient, visitor, employee, attacker, etc.}
+\begin{itemize}
+\aitem{What areas can you gain access to?}
+\aitem{What information can you see?}
+\aitem{What computer screens can you see?}
+\aitem{Do people question you and ask to see identification?}
+\aitem{Are offices and cabinets locked?}
+\aitem{What network ports can you access?}
+\aitem{What wireless networks can you access?}
+\end{itemize}
+\aitem{Next review documentation and risk assessment.}
+\end{itemize}
+\textbf{Documentation}
+\begin{itemize}
+\ditem{Physical Security Policy}
+\ditem{Access logs}
+\ditem{Camera recordings}
+\end{itemize}
+\textbf{Risk Assessment}\\\\
+\begin{tabularx}{\textwidth}{ X | X }
+Threats & Controls \\
+\hline
+\tcitem{Break-in}{Physical access controls: guards, cameras, walls, doors, locks}
+\tcitem{Heat}{Redundant air conditioning}
+\tcitem{Power outage}{UPSs and generators}
+\tcitem{Fire}{Fire suppression}
+\end{tabularx}\vspace{5mm}
+\tccite{Break-in}{Physical access controls: guards, cameras, walls, doors, locks}
+\tccite{Heat}{Redundant air conditioning}
+\tccite{Power outage}{UPSs and generators}
+\tccite{Fire}{Fire suppression}
+\textbf{Resources}
+\begin{enumerate}
+\resource[WPhysicalSecurity]{Physical security - Wikipedia}{https://en.wikipedia.org/wiki/Physical_security}
+\resource[WNetboot]{Network booting - Wikipedia}{https://en.wikipedia.org/wiki/Network_booting}
+\resource[WUPS]{Uninterruptible power supply - Wikipedia}{https://en.wikipedia.org/wiki/Uninterruptible_power_supply}
+\resource[WEPS]{Emergency power system - Wikipedia}{https://en.wikipedia.org/wiki/Emergency_power_system}
+\resource[WHVAC]{HVAC - Wikipedia}{https://en.wikipedia.org/wiki/HVAC}
+\resource[WFM200]{1,1,1,2,3,3,3-Heptafluoropropane (FM-200) - Wikipedia}{https://en.wikipedia.org/wiki/1,1,1,2,3,3,3-Heptafluoropropane}
+\end{enumerate}
+\textbf{Stories}
+\begin{itemize}
+\item Cardboard stuck in the door when the PCI QSA toured the server room.
+\item Server room door propped open with coat hanger.
+\item Converted warehouse office where the walls only go 8 feet high leaving wiring closets open on top.
+\end{itemize}

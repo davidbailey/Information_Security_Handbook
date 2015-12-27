@@ -1,0 +1,45 @@
+\section{Mozilla Wiki Recommended TLS Configurations}
+\textbf{Recommended configurations}\\\\
+Three configurations are recommended. Pick the right configuration depending on your audience. If you do not need backward compatibility, and are building a service for modern clients only (post FF27), then use the Modern configuration. Otherwise, prefer the Intermediate configuration. Use the Old backward compatible configuration only if your service will be accessed by very old clients, such as Windows XP IE6, or ancient libraries \& bots.\\\\
+\begin{tabularx}{\textwidth}{ l | X }
+Configuration & Oldest compatible client\\
+\hline
+Modern & Firefox 27, Chrome 22, IE 11, Opera 14, Safari 7, Android 4.4, Java 8\\
+\hline
+Intermediate & Firefox 1, Chrome 1, IE 7, Opera 5, Safari 1, Windows XP IE8, Android 2.3, Java 7\\
+\hline
+Old	& Windows XP IE6, Java 6\\
+\hline
+\end{tabularx}
+\subsection{Modern compatibility}
+For services that don't need backward compatibility, the parameters below provide a higher level of security. This configuration is compatible with Firefox 27, Chrome 22, IE 11, Opera 14 and Safari 7.
+\begin{itemize}
+\item Ciphersuite: ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
+\item Versions: TLSv1.1, TLSv1.2
+\item RSA key size: 2048
+\item DH Parameter size: 2048
+\item Elliptic curves: secp256r1, secp384r1, secp521r1 (at a minimum)
+\item Certificate signature: SHA-256
+\item HSTS: max-age=15724800
+\end{itemize}
+\subsection{Intermediate compatibility (default)}
+For services that don't need compatibility with legacy clients (mostly WinXP), but still need to support a wide range of clients, this configuration is recommended. It is is compatible with Firefox 1, Chrome 1, IE 7, Opera 5 and Safari 1.
+\begin{itemize}
+\item Ciphersuite: ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA
+\item Versions: TLSv1, TLSv1.1, TLSv1.2
+\item RSA key size: 2048
+\item DH Parameter size: 2048 (see DHE and Java for details)
+\item Elliptic curves: secp256r1, secp384r1, secp521r1 (at a minimum)
+\item Certificate signature: SHA-256
+\end{itemize}
+\subsection{Old backward compatibility}
+This is the old ciphersuite that works with all clients back to Windows XP/IE6. It should be used as a last resort only.
+\begin{itemize}
+\item Ciphersuite: ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA
+\item Versions: SSLv3, TLSv1, TLSv1.1, TLSv1.2
+\item RSA key size: 2048
+\item DH Parameter size: 1024 (see Pre-defined DHE groups)
+\item Elliptic curves: secp256r1, secp384r1, secp521r1
+\item Certificate signature: SHA-1 (windows XP pre-sp3 is incompatible with sha-256)
+\end{itemize}
+\url{https://wiki.mozilla.org/Security/Server_Side_TLS}\\\\This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License. \url{http://creativecommons.org/licenses/by-sa/3.0/}
