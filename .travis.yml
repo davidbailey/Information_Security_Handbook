@@ -10,6 +10,7 @@ addons:
     - texlive-latex-extra
     - texlive-fonts-recommended
     - texlive-fonts-extra
+    - pgf
 
 script:
 - pdflatex -interaction=nonstopmode Information_Security_Handbook.tex
